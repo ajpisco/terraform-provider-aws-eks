@@ -7,7 +7,7 @@ resource "aws_eks_cluster" "main" {
     endpoint_private_access = lookup(var.vpc_config, "endpoint_private_access", null)
     endpoint_public_access  = lookup(var.vpc_config, "endpoint_public_access", null)
     public_access_cidrs     = lookup(var.vpc_config, "public_access_cidrs", null)
-    security_group_ids      = lookup(var.vpc_config, "security_group_ids", null)
+    security_group_ids      = concat(lookup(var.vpc_config, "security_group_ids", []), (length(var.security_group_config) > 0 ? [aws_security_group.main[0].id] : []))
   }
 
   enabled_cluster_log_types = var.enabled_cluster_log_types
@@ -51,7 +51,7 @@ resource "aws_eks_node_group" "main" {
   cluster_name           = aws_eks_cluster.main.name
   node_group_name_prefix = var.cluster_name
   node_role_arn          = aws_iam_role.nodegroup.arn
-  subnet_ids             = var.subnets_id
+  subnet_ids             = var.node_group_subnets_id
 
   scaling_config {
     desired_size = var.scaling_config_desired_size

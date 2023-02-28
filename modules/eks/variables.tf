@@ -2,9 +2,25 @@ variable "cluster_name" {
   type = string
 }
 
+variable "vpc_id" {
+  type        = string
+  description = "VPC ID to be used by the Security Group"
+  default     = ""
+}
+
+variable "security_group_config" {
+  description = "Rules to be set to the Security group"
+  default     = {}
+}
+
 variable "subnets_id" {
   type        = list(string)
-  description = "List of subnets to be used by EKS"
+  description = "List of subnets to be used by EKS Cluster"
+}
+
+variable "node_group_subnets_id" {
+  type        = list(string)
+  description = "List of subnets to be used by EKS Node group"
 }
 
 variable "vpc_config" {
